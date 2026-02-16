@@ -5,6 +5,7 @@ metadata:
     app: mysql
     tier: database
   name: mysql
+  namespace: pricelist
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -40,7 +41,7 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           volumeMounts:
-            - mountPath: /var/lib/mysql/data
+            - mountPath: /var/lib/mysql
               name: mysql-db
           livenessProbe:
             tcpSocket:
