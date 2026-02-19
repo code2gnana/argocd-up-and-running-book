@@ -22,6 +22,7 @@ spec:
     spec:
       containers:
       - image: quay.io/redhatworkshops/pricelist:latest
+        imagePullPolicy: IfNotPresent
         name: pricelist
         env:
         - name: MYSQL_DATABASE
@@ -34,6 +35,13 @@ spec:
           value: mysql
         - name: MYSQL_SERVICE_PORT
           value: "3306"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
         readinessProbe:
           httpGet:
             path: /

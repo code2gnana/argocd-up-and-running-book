@@ -21,7 +21,8 @@ spec:
         tier: database
     spec:
       containers:
-      - image: mysql:5.6.51
+      - image: mysql:8.0
+        imagePullPolicy: IfNotPresent
         name: mysql
         env:
         - name: MYSQL_DATABASE
@@ -35,6 +36,13 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql/data
           name: mysql-db
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
         livenessProbe:
           tcpSocket:
             port: 3306
