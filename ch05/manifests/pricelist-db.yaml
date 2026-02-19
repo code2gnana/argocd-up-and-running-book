@@ -5,6 +5,7 @@ metadata:
     app: mysql
     tier: database
   name: mysql
+  namespace: pricelist
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
@@ -21,39 +22,38 @@ spec:
         tier: database
     spec:
       containers:
-      - image: mysql:8.0
-        imagePullPolicy: IfNotPresent
-        name: mysql
-        env:
-        - name: MYSQL_DATABASE
-          value: pricelist
-        - name: MYSQL_PASSWORD
-          value: pricelist
-        - name: MYSQL_USER
-          value: pricelist
-        - name: MYSQL_RANDOM_ROOT_PASSWORD
-          value: "yes"
-        volumeMounts:
-        - mountPath: /var/lib/mysql/data
-          name: mysql-db
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        livenessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 12
-          periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 12
-          periodSeconds: 10
+        - image: mysql:8.0
+          name: mysql
+          env:
+            - name: MYSQL_DATABASE
+              value: pricelist
+            - name: MYSQL_PASSWORD
+              value: pricelist
+            - name: MYSQL_USER
+              value: pricelist
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "yes"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-db
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 12
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 12
+            periodSeconds: 10
       volumes:
-      - name: mysql-db
-        persistentVolumeClaim:
-          claimName: pricelist-db-pvc
+        - name: mysql-db
+          persistentVolumeClaim:
+            claimName: pricelist-db-pvc

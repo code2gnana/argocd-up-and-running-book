@@ -5,6 +5,7 @@ metadata:
     app: pricelist
     tier: frontend
   name: pricelist
+  namespace: pricelist
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
@@ -21,35 +22,34 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: quay.io/redhatworkshops/pricelist:latest
-        imagePullPolicy: IfNotPresent
-        name: pricelist
-        env:
-        - name: MYSQL_DATABASE
-          value: pricelist
-        - name: MYSQL_PASSWORD
-          value: pricelist
-        - name: MYSQL_USER
-          value: pricelist
-        - name: MYSQL_SERVICE_HOST
-          value: mysql
-        - name: MYSQL_SERVICE_PORT
-          value: "3306"
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "250m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 2
-        livenessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 2
+        - image: quay.io/redhatworkshops/pricelist:latest
+          name: pricelist
+          env:
+            - name: MYSQL_DATABASE
+              value: pricelist
+            - name: MYSQL_PASSWORD
+              value: pricelist
+            - name: MYSQL_USER
+              value: pricelist
+            - name: MYSQL_SERVICE_HOST
+              value: mysql
+            - name: MYSQL_SERVICE_PORT
+              value: "3306"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
